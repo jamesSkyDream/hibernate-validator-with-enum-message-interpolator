@@ -26,6 +26,7 @@ public class ConstraintViolationEnumMessageInterpolator implements MessageInterp
 
         final String errorMessage = localizedViolation.getErrorMessage();
         
+        // TODO tomas: tokenizer solution necessary
         if (!context.getConstraintDescriptor().getAttributes().containsKey("value")) {
             return errorMessage;
             
