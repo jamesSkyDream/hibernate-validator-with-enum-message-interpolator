@@ -1,0 +1,69 @@
+apply from: 'libraries.gradle'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'java'
+
+version = '0.0.1-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    
+    // Validation
+    compile libraries.hibernate_validator
+    compile libraries.javax_el_api
+    compile libraries.javax_el
+
+    // TestNG
+    testCompile libraries.testng
+
+    // Hamcrest
+    testCompile libraries.hamcrest_all
+    
+    // Spring
+    compile libraries.spring_context
+    testCompile libraries.spring_test
+    
+    // Injection
+    compile libraries.javax_inject
+}
+
+
+test {
+    // Enables TestNG support (default is JUnit)
+    useTestNG()
+
+    // Listens to events in the test execution lifecycle
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: ${descriptor.className}.${descriptor.name}")
+    }
+
+    // Listens to standard out and standard error of the test JVM(s)
+    afterTest { descriptor, event ->
+        logger.lifecycle("${event.resultType}: test ${descriptor.className}.${descriptor.name} executed")
+    }
+}
+
+
+task wrapper(type: Wrapper) {
+
+    // The distribution will be unpacked to the $USER_HOME/.gradle/gradle/dists
+    archiveBase = Wrapper.PathBase.GRADLE_USER_HOME
+    archivePath = 'gradle/dists'
+    distributionUrl = 'https://services.gradle.org/distributions/gradle-2.2-all.zip'
+}
